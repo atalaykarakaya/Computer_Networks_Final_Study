@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COE214 – Computer Networks Sınav Hazırlık</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --surface: #161a23;
+  --surface2: #1e2330;
+  --border: #2a3040;
+  --accent: #5b8dee;
+  --accent2: #a78bfa;
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --red: #f87171;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Plus Jakarta Sans', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.logo { font-family: var(--mono); font-size: 1rem; color: var(--accent); letter-spacing: 1px; }
+.logo span { color: var(--muted); }
+nav { display: flex; gap: 0.25rem; }
+nav button {
+  background: none; border: none; color: var(--muted);
+  font-family: var(--sans); font-size: 0.8rem; font-weight: 600;
+  padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer;
+  transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;
+}
+nav button:hover, nav button.active { background: var(--surface2); color: var(--text); }
+nav button.active { color: var(--accent); }
+
+main { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+.hero { text-align: center; padding: 3rem 0 2rem; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.1; margin-bottom: 0.75rem; }
+.hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero p { color: var(--muted); font-size: 1rem; max-width: 420px; margin: 0 auto 1.5rem; }
+.badge-row { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+.badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 0.3rem 0.8rem; font-size: 0.75rem; font-family: var(--mono); color: var(--muted); }
+
+.section-title { font-size: 0.7rem; font-family: var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+.lesson-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; margin-bottom: 3rem; }
+.lesson-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+.lesson-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent); opacity: 0; transition: opacity 0.2s; }
+.lesson-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.lesson-card:hover::before { opacity: 1; }
+.lesson-num { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); margin-bottom: 0.5rem; }
+.lesson-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; }
+.lesson-card p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+.lesson-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.tag { font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 4px; background: var(--surface2); color: var(--muted); font-family: var(--mono); }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.back-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--border); color: var(--muted); font-family: var(--sans); font-size: 0.8rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-bottom: 1.5rem; }
+.back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.lesson-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.lesson-header .lec-num { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); margin-bottom: 0.5rem; }
+.lesson-header h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+.lesson-header p { color: var(--muted); font-size: 0.9rem; }
+
+.tab-nav { display: flex; gap: 0.25rem; margin-bottom: 1.5rem; background: var(--surface); padding: 0.3rem; border-radius: 10px; border: 1px solid var(--border); width: fit-content; }
+.tab-btn { background: none; border: none; color: var(--muted); font-family: var(--sans); font-size: 0.82rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 7px; cursor: pointer; transition: all 0.2s; }
+.tab-btn.active { background: var(--surface2); color: var(--text); }
+.tab-btn.active[data-tab="notes"] { color: var(--accent); }
+.tab-btn.active[data-tab="questions"] { color: var(--yellow); }
+.tab-btn.active[data-tab="quiz"] { color: var(--green); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.topic-block { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; }
+.topic-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; cursor: pointer; transition: background 0.15s; }
+.topic-header:hover { background: var(--surface2); }
+.topic-header h4 { font-size: 0.95rem; font-weight: 700; }
+.topic-arrow { color: var(--muted); font-size: 0.8rem; transition: transform 0.2s; }
+.topic-block.open .topic-arrow { transform: rotate(180deg); }
+.topic-body { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--border); }
+.topic-block.open .topic-body { display: block; }
+.topic-body p { font-size: 0.88rem; color: var(--text); line-height: 1.7; margin-top: 0.75rem; margin-bottom: 0.5rem; }
+.topic-body .note-list { list-style: none; margin: 0.5rem 0; }
+.topic-body .note-list li { font-size: 0.85rem; color: var(--text); line-height: 1.6; padding: 0.3rem 0 0.3rem 1.2rem; position: relative; }
+.topic-body .note-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+
+.highlight-box { background: rgba(91,141,238,0.08); border: 1px solid rgba(91,141,238,0.25); border-radius: 8px; padding: 0.8rem 1rem; margin: 0.75rem 0; font-size: 0.83rem; line-height: 1.6; }
+.highlight-box.yellow { background: rgba(251,191,36,0.07); border-color: rgba(251,191,36,0.25); }
+.highlight-box.green { background: rgba(52,211,153,0.07); border-color: rgba(52,211,153,0.25); }
+.highlight-box.red { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.25); }
+.highlight-box strong { color: var(--accent); }
+.highlight-box.yellow strong { color: var(--yellow); }
+.highlight-box.green strong { color: var(--green); }
+.highlight-box.red strong { color: var(--red); }
+
+.compare-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 0.75rem 0; }
+.compare-table th { background: var(--surface2); padding: 0.6rem 0.8rem; text-align: left; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+.compare-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); line-height: 1.5; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table .th-accent { color: var(--accent); }
+.compare-table .th-yellow { color: var(--yellow); }
+
+code { font-family: var(--mono); font-size: 0.8em; background: var(--surface2); padding: 0.15em 0.4em; border-radius: 4px; color: var(--green); }
+
+.question-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.q-label { font-family: var(--mono); font-size: 0.65rem; color: var(--yellow); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+.question-card h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.75rem; }
+.answer-toggle { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: var(--sans); font-size: 0.78rem; font-weight: 600; padding: 0.45rem 0.9rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+.answer-toggle:hover { border-color: var(--yellow); color: var(--yellow); }
+.answer-body { display: none; margin-top: 0.75rem; padding: 0.8rem 1rem; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; font-size: 0.85rem; line-height: 1.7; color: var(--text); }
+.answer-body.visible { display: block; }
+
+.quiz-start { text-align: center; padding: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+.quiz-start h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.quiz-start p { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+.btn-primary { background: var(--accent); border: none; color: white; font-family: var(--sans); font-size: 0.88rem; font-weight: 700; padding: 0.7rem 1.6rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.quiz-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; }
+.quiz-progress { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.progress-bar { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
+.quiz-counter { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
+.quiz-q { font-size: 1rem; font-weight: 700; line-height: 1.5; margin-bottom: 1.25rem; }
+.options { display: flex; flex-direction: column; gap: 0.5rem; }
+.option-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: var(--sans); font-size: 0.85rem; font-weight: 500; padding: 0.75rem 1rem; border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.2s; }
+.option-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.option-btn.correct { border-color: var(--green); color: var(--green); background: rgba(52,211,153,0.08); }
+.option-btn.wrong { border-color: var(--red); color: var(--red); background: rgba(248,113,113,0.08); }
+.option-btn:disabled { cursor: default; }
+.quiz-feedback { margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; line-height: 1.6; display: none; }
+.quiz-feedback.correct { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25); color: var(--green); display: block; }
+.quiz-feedback.wrong { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); color: var(--red); display: block; }
+.quiz-feedback strong { display: block; margin-bottom: 0.25rem; }
+.next-btn { margin-top: 1rem; display: none; }
+.next-btn.visible { display: block; }
+.quiz-result { text-align: center; padding: 2rem; }
+.score-circle { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800; font-family: var(--mono); }
+.score-good { background: rgba(52,211,153,0.15); border: 3px solid var(--green); color: var(--green); }
+.score-ok { background: rgba(251,191,36,0.15); border: 3px solid var(--yellow); color: var(--yellow); }
+.score-bad { background: rgba(248,113,113,0.15); border: 3px solid var(--red); color: var(--red); }
+.quiz-result h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.quiz-result p { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+
+#home-view .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 2rem; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; }
+.stat-card .num { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+.stat-card .label { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+@media (max-width: 600px) {
+  header { padding: 0 1rem; }
+  nav button { font-size: 0.7rem; padding: 0.35rem 0.6rem; }
+  main { padding: 1rem 1rem 3rem; }
+  .tab-nav { width: 100%; }
+  .tab-btn { flex: 1; text-align: center; font-size: 0.75rem; padding: 0.45rem 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">COE214 <span>/ Computer Networks</span></div>
+  <nav>
+    <button class="active" onclick="showPage('home')">Ana Sayfa</button>
+    <button onclick="showPage('lessons')">Dersler</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- HOME PAGE -->
+<div id="home-view" class="page active">
+  <div class="hero">
+    <h1>Sınava Hazır mısın?<br><em>Computer Networks</em></h1>
+    <p>Lecture 8–12 konularını PPTX notlarından derlenen özet, örnek soru ve quizlerle pekiştir.</p>
+    <div class="badge-row">
+      <span class="badge">COE214</span>
+      <span class="badge">Dr. Necip Gözüaçık</span>
+      <span class="badge">5 Ders Notu</span>
+    </div>
+  </div>
+  <div class="stat-row">
+    <div class="stat-card"><div class="num">5</div><div class="label">Ders Notu</div></div>
+    <div class="stat-card"><div class="num">25+</div><div class="label">Örnek Soru</div></div>
+    <div class="stat-card"><div class="num">50+</div><div class="label">Quiz Sorusu</div></div>
+  </div>
+  <div class="section-title">Dersler</div>
+  <div class="lesson-grid">
+    <div class="lesson-card" onclick="openLesson(8)">
+      <div class="lesson-num">LECTURE 8</div>
+      <h3>Network Layer: Control Plane I</h3>
+      <p>Routing algoritmaları, Dijkstra link-state, Distance Vector ve Bellman-Ford.</p>
+      <div class="lesson-tags"><span class="tag">Dijkstra</span><span class="tag">DV</span><span class="tag">Link State</span><span class="tag">Bellman-Ford</span></div>
+    </div>
+    <div class="lesson-card" onclick="openLesson(9)">
+      <div class="lesson-num">LECTURE 9</div>
+      <h3>Network Layer: Control Plane II</h3>
+      <p>Scalable routing, OSPF, BGP, SDN, OpenFlow, SNMP ve NETCONF/YANG.</p>
+      <div class="lesson-tags"><span class="tag">OSPF</span><span class="tag">BGP</span><span class="tag">SDN</span><span class="tag">SNMP</span></div>
+    </div>
+    <div class="lesson-card" onclick="openLesson(10)">
+      <div class="lesson-num">LECTURE 10</div>
+      <h3>Local Area Network (LAN)</h3>
+      <p>IEEE 802, Ethernet, Bridge, Hub, Switch ve VLAN mimarisi.</p>
+      <div class="lesson-tags"><span class="tag">Ethernet</span><span class="tag">Switch</span><span class="tag">VLAN</span><span class="tag">IEEE 802</span></div>
+    </div>
+    <div class="lesson-card" onclick="openLesson(11)">
+      <div class="lesson-num">LECTURE 11</div>
+      <h3>Security (I)</h3>
+      <p>Kriptografi temelleri, symmetric/asymmetric key, digital signature, CA, TLS.</p>
+      <div class="lesson-tags"><span class="tag">Cryptography</span><span class="tag">RSA</span><span class="tag">CA</span><span class="tag">TLS</span></div>
+    </div>
+    <div class="lesson-card" onclick="openLesson(12)">
+      <div class="lesson-num">LECTURE 12</div>
+      <h3>Security (II)</h3>
+      <p>Firewall türleri, stateless/stateful filtering, IDS ve iptables.</p>
+      <div class="lesson-tags"><span class="tag">Firewall</span><span class="tag">IDS</span><span class="tag">iptables</span><span class="tag">ACL</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LESSONS LIST PAGE -->
+<div id="lessons-view" class="page">
+  <div class="section-title">Tüm Dersler</div>
+  <div class="lesson-grid">
+    <div class="lesson-card" onclick="openLesson(8)"><div class="lesson-num">LECTURE 8</div><h3>Network Layer: Control Plane I</h3><p>Routing algoritmaları, Dijkstra, Distance Vector, Bellman-Ford, LS vs DV karşılaştırması.</p></div>
+    <div class="lesson-card" onclick="openLesson(9)"><div class="lesson-num">LECTURE 9</div><h3>Network Layer: Control Plane II</h3><p>AS, OSPF, BGP (eBGP/iBGP), SDN, OpenFlow, SNMP, NETCONF/YANG.</p></div>
+    <div class="lesson-card" onclick="openLesson(10)"><div class="lesson-num">LECTURE 10</div><h3>Local Area Network (LAN)</h3><p>IEEE 802, Ethernet, Bridge, Hub, Switch türleri, VLAN.</p></div>
+    <div class="lesson-card" onclick="openLesson(11)"><div class="lesson-num">LECTURE 11</div><h3>Security (I)</h3><p>Kriptografi, symmetric/asymmetric key, digital signature, CA, TLS temelleri.</p></div>
+    <div class="lesson-card" onclick="openLesson(12)"><div class="lesson-num">LECTURE 12</div><h3>Security (II)</h3><p>Firewall türleri, ACL, stateful filtering, application gateway, IDS, iptables.</p></div>
+  </div>
+</div>
+
+<!-- LESSON DETAIL PAGE -->
+<div id="lesson-view" class="page">
+  <button class="back-btn" onclick="goBack()">← Geri Dön</button>
+  <div id="lesson-content"></div>
+</div>
+
+</main>
+
+<script>
+const LESSONS = {
+
+8: {
+  num: 8,
+  title: "Network Layer: Control Plane I",
+  desc: "Routing algoritmaları: Link-State (Dijkstra) ve Distance Vector (Bellman-Ford) — karşılaştırma ve örnekler",
+  notes: [
+    {
+      title: "📍 Control Plane Nedir?",
+      body: `
+<p>Network layer iki ana işleve sahiptir:</p>
+<ul class="note-list">
+  <li><strong>Data Plane (forwarding):</strong> Gelen paketi doğru çıkış portuna yönlendirir. Router'da, hızlıdır.</li>
+  <li><strong>Control Plane (routing):</strong> Kaynaktan hedefe <em>en iyi yolu</em> belirler.</li>
+</ul>
+<div class="highlight-box"><strong>Per-router control (geleneksel):</strong> Her router kendi routing algoritmasını çalıştırır, komşularıyla iletişim kurarak forwarding tablosunu oluşturur.</div>
+<div class="highlight-box yellow"><strong>SDN (Software Defined Networking):</strong> Merkezi bir controller tüm router'ların forwarding tablolarını hesaplayıp gönderir. Router sadece veriyi iletir.</div>
+      `
+    },
+    {
+      title: "📐 Routing Algoritma Sınıflandırması",
+      body: `
+<p><strong>Bilgi türüne göre:</strong></p>
+<ul class="note-list">
+  <li><strong>Global (Link State):</strong> Her router tüm ağın haritasını bilir. Dijkstra kullanır.</li>
+  <li><strong>Decentralized (Distance Vector):</strong> Her router sadece komşularından bilgi alır. Bellman-Ford kullanır.</li>
+</ul>
+<p><strong>Değişim hızına göre:</strong></p>
+<ul class="note-list">
+  <li><strong>Static routing:</strong> Yollar elle girilir, değişmez.</li>
+  <li><strong>Dynamic routing:</strong> Periyodik güncelleme veya link maliyeti değişince otomatik uyum sağlar.</li>
+</ul>
+<div class="highlight-box green"><strong>Routing hedefi:</strong> "İyi" yolları bul — en az maliyet, en hızlı, en az kalabalık. Routing, ağ mühendisliğinin top-10 zorluklarından biridir!</div>
+      `
+    },
+    {
+      title: "🔵 Dijkstra Link-State Algoritması",
+      body: `
+<p>Tüm ağı bilen kaynak düğüm, tüm diğer düğümlere <strong>en kısa yolu</strong> iteratif olarak bulur.</p>
+<p><strong>Gösterim:</strong></p>
+<ul class="note-list">
+  <li><strong>N':</strong> En kısa yolu kesinleşmiş düğümler kümesi</li>
+  <li><strong>D(v):</strong> Kaynaktan v'ye şu anki en düşük maliyet tahmini</li>
+  <li><strong>p(v):</strong> v'nin predecessor (önceki) düğümü</li>
+  <li><strong>c(x,y):</strong> x ile y arasındaki direkt link maliyeti (komşu değilse ∞)</li>
+</ul>
+<div class="highlight-box green"><strong>Pseudokod:</strong><br>
+<code>Başlangıç: N' = {u}, D(v) = c(u,v) (komşu ise), D(v) = ∞ (değilse)</code><br>
+<code>Loop: D(w) değeri en küçük w'yu N'ye ekle</code><br>
+<code>Güncelle: D(v) = min(D(v), D(w) + c(w,v)) tüm v komşuları için</code><br>
+<code>Until: tüm düğümler N'de</code></div>
+<p><strong>Örnek (u-kaynak):</strong> u→x: 1, u→y: 2 (u-x-y), u→w: 3 (u-x-y-w), u→v: 2 (u-x-v), u→z: 4 (u-x-y-z)</p>
+<p><strong>Karmaşıklık:</strong> n(n+1)/2 karşılaştırma → O(n²). Heap ile O(n log n).</p>
+      `
+    },
+    {
+      title: "🟠 Distance Vector (Bellman-Ford) Algoritması",
+      body: `
+<p>Her düğüm komşularından gelen <strong>distance vector</strong> bilgisiyle kendi tablosunu iteratif günceller.</p>
+<div class="highlight-box"><strong>Bellman-Ford Denklemi:</strong><br>
+<code>Dx(y) = min_v { c(x,v) + Dv(y) }</code><br>
+x'ten y'ye min maliyet = komşu v üzerinden giden en iyi yol</div>
+<p><strong>Örnek hesaplama:</strong><br>
+Du(z) = min{ c(u,v)+Dv(z), c(u,x)+Dx(z), c(u,w)+Dw(z) } = min{2+5, 1+3, 5+3} = 4 (via x)</p>
+<p><strong>Algoritma çalışması:</strong></p>
+<ul class="note-list">
+  <li>Her düğüm DV'sini komşularına gönderir</li>
+  <li>Komşudan yeni DV gelince B-F ile kendi tablosunu günceller</li>
+  <li>Değişiklik varsa tekrar komşulara bildirir — iteratif, asenkron, self-stopping</li>
+  <li>Bilgi diffüzyonu: t adımda t hop uzaktaki düğümlere ulaşır</li>
+</ul>
+<div class="highlight-box red"><strong>Count-to-Infinity Problemi:</strong> Link maliyeti artınca "bad news travels slow". Örnek: y-x arası 4→60 oldu. z hâlâ eski tablosuna bakıp "5'e gidebilirim" der, y "z üzerinden 6" hesaplar, z "y üzerinden 7" hesaplar… sonsuz döngü. <strong>Good news fast, bad news slow!</strong></div>
+      `
+    },
+    {
+      title: "⚖️ LS vs DV Tam Karşılaştırması",
+      body: `
+<table class="compare-table">
+  <tr><th class="th-accent">Özellik</th><th class="th-accent">Link State (LS)</th><th class="th-yellow">Distance Vector (DV)</th></tr>
+  <tr><td>Algoritma</td><td>Dijkstra</td><td>Bellman-Ford</td></tr>
+  <tr><td>Bilgi türü</td><td>Global — tüm ağı bilir</td><td>Lokal — sadece komşuları</td></tr>
+  <tr><td>Bant genişliği</td><td>Daha fazla (flooding, büyük paketler)</td><td>Daha az (küçük paketler, lokal paylaşım)</td></tr>
+  <tr><td>Convergence</td><td>Hızlı</td><td>Yavaş (bad news slow)</td></tr>
+  <tr><td>Count-to-infinity</td><td>Yok</td><td>Var</td></tr>
+  <tr><td>Kalıcı döngü</td><td>Yok (sadece geçici)</td><td>Var (persistent looping)</td></tr>
+  <tr><td>Trafik</td><td>Daha fazla</td><td>Daha az</td></tr>
+  <tr><td>Pratik uygulama</td><td>OSPF</td><td>BGP (path vector türevi)</td></tr>
+</table>
+      `
+    }
+  ],
+  questions: [
+    { q: "Dijkstra algoritmasında N' kümesi, D(v) ve p(v) ne anlama gelir?", a: "N': En kısa yolu kesinleşmiş düğümler kümesi. D(v): Kaynaktan v'ye hesaplanan şu anki en düşük maliyet tahmini. p(v): Kaynaktan v'ye giden en kısa yolda v'nin öncesindeki düğüm (predecessor). Her iterasyonda D değeri en küçük olan kesinleşmemiş düğüm N'ye alınır." },
+    { q: "Bellman-Ford denklemini yaz ve count-to-infinity problemini açıkla.", a: "Dx(y) = min_v { c(x,v) + Dv(y) } — x'ten y'ye en kısa yol, x'in komşusu v'ler üzerinden hesaplanan minimum. Count-to-infinity: y-x link maliyeti 4'ten 60'a çıktığında z hâlâ 5'lik eski tablosunu tutar. y 'z üzerinden 6 ile gidebilirim' der, z 'y üzerinden 7' hesaplar, y '8'... bu döngü sonsuza gider çünkü kötü haber çok yavaş yayılır." },
+    { q: "Dijkstra'nın zaman ve mesaj karmaşıklığı nedir?", a: "Zaman: n(n+1)/2 karşılaştırma → O(n²). Heap implementasyonu ile O(n log n). Mesaj: Her router link-state'ini n router'a yaymalı → O(n) link geçişi → toplam O(n²) mesaj karmaşıklığı." },
+    { q: "Per-router control ile SDN control plane arasındaki temel fark nedir?", a: "Per-router: Her router kendi routing algoritmasını çalıştırır, komşularıyla konuşur, tablosunu bağımsızca oluşturur. SDN: Merkezi controller tüm ağı görür, tüm forwarding tablolarını hesaplayıp router'lara gönderir. Router sadece veriyi iletir; routing kararı merkezi olarak verilir. SDN ağı yönetmeyi kolaylaştırır ve 'programlanabilir' yapar." },
+    { q: "DV'de bilgi diffüzyonu nasıl gerçekleşir? t=1, t=2 adımlarında ne olur?", a: "t=0'da her düğüm sadece kendi state'ini bilir. t=1'de her düğüm komşularının DV'lerini alır → 1 hop uzaktaki bilgileri öğrenir. t=2'de 2 hop uzaktaki bilgiler ulaşır. Genel kural: t adımda, t hop ötedeki düğümlerin state bilgileri yayılmış olur. Bu iteratif, asenkron yayılma convergence'ı sağlar." }
+  ],
+  quiz: [
+    { q: "Dijkstra algoritması hangi routing türünde kullanılır?", opts: ["Distance Vector", "Link State", "Path Vector", "Bellman-Ford"], ans: 1, exp: "Dijkstra, Link State routing'de kullanılır. Her router tüm ağın topolojisini flooding ile öğrenir ve Dijkstra ile en kısa yolları hesaplar." },
+    { q: "Bellman-Ford denkleminde 'min' hangi küme üzerinden alınır?", opts: ["Tüm ağdaki düğümler", "Yalnızca hedef düğüm", "x'in komşuları v", "N' kümesi"], ans: 2, exp: "Dx(y) = min_v { c(x,v) + Dv(y) } — minimum, x düğümünün tüm komşuları v üzerinden hesaplanır." },
+    { q: "Count-to-infinity problemi neden oluşur?", opts: ["Düğüm sayısı çok fazla olduğunda", "Link maliyeti artınca kötü haberin çok yavaş yayılması", "Flooding çok fazla bant genişliği tükettiğinde", "Dijkstra'nın döngüye girmesi"], ans: 1, exp: "'Bad news travels slow' — link maliyeti artınca komşular birbirlerine giderek artan yanlış maliyetler iletir. DV'nin en büyük zayıflığıdır." },
+    { q: "Dijkstra'nın basit implementasyondaki zaman karmaşıklığı nedir?", opts: ["O(n)", "O(n log n)", "O(n²)", "O(2^n)"], ans: 2, exp: "Her n iterasyonda n düğüm kontrol edilir → n(n+1)/2 karşılaştırma → O(n²). Min-heap kullanılırsa O(n log n) mümkündür." },
+    { q: "DV'de bir düğüm tablosunu güncellediğinde ne yapar?", opts: ["Tüm ağa flooding yapar", "Sadece kendi tablosunu saklar", "Komşularına yeni DV'sini gönderir", "Controller'a bildirir"], ans: 2, exp: "DV'de bir düğüm yalnızca komşularına yeni distance vector'ını gönderir. Flooding yoktur — bu nedenle daha az bant genişliği kullanır." },
+    { q: "Link State'te her router topolojiyi nasıl öğrenir?", opts: ["Komşularından tek tek sorar", "Flooding ile tüm AS'e link-state advertisement yayar", "Controller'dan indirir", "BGP ile öğrenir"], ans: 1, exp: "LS'te her router kendi link-state bilgisini tüm ağa flooding (taşkın) ile duyurur. Böylece her router tüm ağın haritasına sahip olur." },
+    { q: "Forwarding tablosu hangi bileşene aittir?", opts: ["Control Plane", "Data Plane", "BGP", "SNMP"], ans: 1, exp: "Forwarding tablosu Data Plane'in temel yapısıdır. Routing algoritması (Control Plane) bu tabloyu hesaplar; Data Plane paketi iletirken tabloyu kullanır." },
+    { q: "SDN'de routing kararları nerede verilir?", opts: ["Her router'da ayrı ayrı", "Merkezi bir controller'da", "Gateway router'da", "DNS sunucusunda"], ans: 1, exp: "SDN'de routing kararları merkezi controller'da verilir. Controller tüm forwarding tablolarını hesaplayıp router'lara gönderir." },
+    { q: "DV'de 'good news travels fast' ne demektir?", opts: ["Bant genişliği artışı hızlı yayılır", "Link maliyeti azalınca düğümler hemen daha iyi yolu benimser", "Yeni düğüm eklenmesi hızlı propagate olur", "Paket iletimi hızlanır"], ans: 1, exp: "Maliyet azaldığında (good news) düğümler hemen yeni daha ucuz yolu benimser ve güncelleme hızla yayılır. Ama maliyet artışı (bad news) çok yavaş yayılır — count-to-infinity." },
+    { q: "LS routing'in pratik uygulaması hangi protokoldür?", opts: ["BGP", "RIP", "OSPF", "EIGRP"], ans: 2, exp: "OSPF (Open Shortest Path First), Link State routing'i kullanan başlıca intra-AS protokolüdür. BGP ise path vector tabanlıdır (DV'nin gelişmiş versiyonu)." }
+  ]
+},
+
+9: {
+  num: 9,
+  title: "Network Layer: Control Plane II",
+  desc: "Scalable routing, AS, OSPF, BGP, SDN/OpenFlow, SNMP, NETCONF/YANG",
+  notes: [
+    {
+      title: "📦 Routing'i Ölçeklenebilir Yapma",
+      body: `
+<p>Gerçek İnternette milyarlarca hedef var. Tüm routing tablosunu tutmak imkansız!</p>
+<p><strong>İki temel sorun:</strong></p>
+<ul class="note-list">
+  <li><strong>Scale:</strong> Milyarlarca hedef routing tablosuna sığmaz, güncelleme trafiği linkleri tıkar</li>
+  <li><strong>Yönetim özerkliği:</strong> Her ağ yöneticisi kendi ağındaki routing'i kontrol etmek ister</li>
+</ul>
+<div class="highlight-box"><strong>Çözüm — Autonomous System (AS):</strong> Router'ları bölgelere böl. Her bölge kendi routing'ini çalıştırır.<br>
+<strong>Intra-AS (IGP):</strong> Aynı AS içi routing — OSPF, RIP, EIGRP<br>
+<strong>Inter-AS (EGP):</strong> AS'ler arası routing — BGP<br>
+<strong>Gateway router:</strong> AS kenarında, diğer AS'lere link'i olan router</div>
+      `
+    },
+    {
+      title: "🟢 OSPF (Open Shortest Path First)",
+      body: `
+<p>En yaygın <strong>intra-AS</strong> routing protokolü. Link State tabanlı, RFC 2328.</p>
+<ul class="note-list">
+  <li>"Open": publicly available (açık standart)</li>
+  <li>Her router OSPF link-state advertisement'larını tüm AS'e <strong>flooding</strong> ile yayar — direkt IP üzerinden (TCP/UDP değil, protocol 89)</li>
+  <li>Her router tam topolojiyi öğrenir, <strong>Dijkstra</strong> ile forwarding tablosunu hesaplar</li>
+  <li>Tüm OSPF mesajları <strong>authenticated</strong> — kötü niyetli müdahaleye karşı</li>
+  <li>Birden fazla cost metric destekler: bandwidth, delay, vb.</li>
+</ul>
+<div class="highlight-box green"><strong>Hierarchical OSPF:</strong> İki seviye: <em>local area</em> + <em>backbone</em><br>
+• <strong>Local router:</strong> Sadece kendi alanında LS flooding yapar<br>
+• <strong>Area border router:</strong> Alanını özetler, backbone'a duyurur<br>
+• <strong>Backbone router:</strong> Sadece backbone içinde çalışır<br>
+• <strong>Boundary router:</strong> Diğer AS'lere bağlantı sağlar</div>
+      `
+    },
+    {
+      title: "🔵 BGP (Border Gateway Protocol)",
+      body: `
+<p>İnternetin "yapıştırıcısı" — tek inter-AS routing protokolü.</p>
+<ul class="note-list">
+  <li><strong>eBGP (external):</strong> Farklı AS'lerin gateway router'ları arasında — dış reachability öğrenir</li>
+  <li><strong>iBGP (internal):</strong> Aynı AS içinde — eBGP'den öğrenilen bilgiyi tüm AS'e yayar</li>
+  <li>BGP mesajları <strong>TCP üzerinden</strong> (port 179)</li>
+  <li><strong>Path vector protokolüdür</strong> — AS-PATH ile döngü önlenir</li>
+</ul>
+<div class="highlight-box"><strong>BGP Route = prefix + attributes:</strong><br>
+<code>AS-PATH</code>: Geçilen AS'lerin listesi (loop detection)<br>
+<code>NEXT-HOP</code>: Bir sonraki hop AS'e giriş noktası</div>
+<p><strong>BGP Mesaj Tipleri:</strong> <code>OPEN</code> (bağlantı kur), <code>UPDATE</code> (yeni yol duyur), <code>KEEPALIVE</code> (bağlantıyı canlı tut), <code>NOTIFICATION</code> (hata bildir)</p>
+<div class="highlight-box yellow"><strong>Hot potato routing:</strong> En az intra-domain maliyete sahip gateway'i seç. Inter-domain maliyeti umursamadan lokal maliyeti minimize et.</div>
+<p><strong>Route seçim sırası:</strong> Local preference → kısa AS-PATH → closest NEXT-HOP (hot potato) → ek kriterler</p>
+      `
+    },
+    {
+      title: "⚙️ SDN (Software Defined Networking)",
+      body: `
+<p>~2005'ten itibaren ağ kontrolünü yeniden tasarlama hareketi.</p>
+<ul class="note-list">
+  <li><strong>Generalized flow-based forwarding:</strong> OpenFlow gibi API'ler</li>
+  <li><strong>Control/data plane ayrımı:</strong> Router sadece iletir, karar vermez</li>
+  <li><strong>Harici control plane:</strong> Controller switch'lerin dışında çalışır</li>
+  <li><strong>Programmable apps:</strong> Routing, access control, load balancing uygulamaları</li>
+</ul>
+<div class="highlight-box"><strong>SDN Controller bileşenleri:</strong><br>
+• Northbound API → ağ kontrol uygulamaları<br>
+• Southbound API → switch'ler (OpenFlow, SNMP)<br>
+• State yönetimi: link-state, switch, host, istatistik</div>
+<p><strong>OpenFlow mesajları:</strong> Controller→Switch: <code>features</code>, <code>configure</code>, <code>modify-state</code>, <code>packet-out</code>. Switch→Controller: <code>packet-in</code>, <code>flow-removed</code>, <code>port-status</code></p>
+      `
+    },
+    {
+      title: "🛠️ SNMP & NETCONF/YANG",
+      body: `
+<p><strong>SNMP (Simple Network Management Protocol):</strong> Ağ cihazlarını uzaktan yönetme/izleme.</p>
+<ul class="note-list">
+  <li><strong>MIB (Management Information Base):</strong> Cihazın yönetim verisi veri tabanı. 400+ MIB modülü RFC'de tanımlı.</li>
+  <li><strong>Agent:</strong> Cihaz üzerinde çalışır, MIB verisini tutar</li>
+  <li><strong>Manager (Managing Server):</strong> Sorgular gönderir, olayları alır</li>
+</ul>
+<table class="compare-table">
+  <tr><th>Mesaj</th><th>Yön</th><th>İşlev</th></tr>
+  <tr><td><code>GetRequest / GetNextRequest / GetBulkRequest</code></td><td>Manager→Agent</td><td>Veri iste</td></tr>
+  <tr><td><code>SetRequest</code></td><td>Manager→Agent</td><td>MIB değeri ayarla</td></tr>
+  <tr><td><code>Response</code></td><td>Agent→Manager</td><td>Değer / cevap</td></tr>
+  <tr><td><code>Trap</code></td><td>Agent→Manager</td><td>Olağanüstü durum bildirimi (proaktif)</td></tr>
+</table>
+<div class="highlight-box yellow"><strong>NETCONF/YANG:</strong><br>
+<strong>NETCONF:</strong> Cihazları programatik yönetim. XML mesajlar, TLS üzerinden. RPC paradigması: <code>edit-config</code>, <code>get-config</code>. Çoklu-cihaz konfigürasyonu.<br>
+<strong>YANG:</strong> NETCONF için veri modelleme dili. Yapı, tip, kısıtları tanımlar. YANG'dan XML üretilebilir.</div>
+<p><strong>SNMP vs NETCONF:</strong> SNMP mevcut veriyi okur/ayarlar. NETCONF daha kapsamlı, çoklu-cihaz, programatik konfigürasyon içindir.</p>
+      `
+    }
+  ],
+  questions: [
+    { q: "AS (Autonomous System) nedir ve intra-AS ile inter-AS routing farkı nedir?", a: "AS, aynı yönetim altındaki router'ların oluşturduğu bölgedir. İnternette ölçek sorununu çözer. Intra-AS (IGP): Aynı AS içindeki routing — tüm router'lar aynı protokolü çalıştırır (OSPF, RIP, EIGRP). Inter-AS (EGP): Farklı AS'ler arasındaki routing — sadece BGP kullanılır. Gateway router'lar her iki protokolü de çalıştırır." },
+    { q: "OSPF neden TCP/UDP kullanmaz? Hierarchical OSPF'de kaç seviye var?", a: "OSPF mesajlarını direkt IP datagram'larına (protokol numarası 89) yerleştirir — overhead azaltır. Link-state advertisement'lar flooding ile yayılır. Güvenlik: tüm mesajlar authenticated. Hierarchical OSPF: 2 seviye — local area ve backbone. Area border router alanını özetler; backbone router sadece backbone'da çalışır; boundary router diğer AS'lere bağlar." },
+    { q: "BGP'de eBGP ve iBGP'nin rolü nedir?", a: "eBGP: Farklı AS'lerin gateway router'ları arasında çalışır. Dış AS'lerden reachability prefix'leri öğrenir. iBGP: Aynı AS içinde çalışır. eBGP ile öğrenilen dış reachability bilgisini AS'in tüm internal router'larına yayar. Örnek: 1a, 1b, 1d router'ları, 1c'nin eBGP ile öğrendiği 'X'e giden yol' bilgisini iBGP üzerinden öğrenir." },
+    { q: "SDN'de northbound ve southbound API ne demektir?", a: "Northbound API: SDN controller ile ağ kontrol uygulamaları (routing, access control, load balancing) arasındaki arayüz. Uygulamalar controller'a ne yapması gerektiğini bildirir. Southbound API: SDN controller ile dataplane switch'leri arasındaki arayüz. Controller, OpenFlow gibi protokollerle forwarding tablolarını yükler ve durum bilgisi alır." },
+    { q: "SNMP'de MIB nedir ve Trap mesajı ne zaman kullanılır?", a: "MIB (Management Information Base): Yönetilen cihazda agent'ın tuttuğu operasyonel ve konfigürasyon verilerinin yapılandırılmış veri tabanı. 400+ MIB modülü RFC'de standart; ek vendor-specific MIB'ler de var. Trap: Agent'ın olağanüstü bir olay (interface down, threshold aşıldı) gerçekleştiğinde manager'a proaktif gönderdiği bildirimdir — manager sürekli sorgu yapmak zorunda kalmaz." }
+  ],
+  quiz: [
+    { q: "BGP hangi tür routing için kullanılır?", opts: ["Intra-AS", "Inter-AS", "Local Area", "Link State"], ans: 1, exp: "BGP (Border Gateway Protocol) inter-AS routing için kullanılır — farklı Autonomous System'ler arası tek protokoldür." },
+    { q: "OSPF hangi algoritmayı kullanır?", opts: ["Bellman-Ford", "Dijkstra", "Prim", "Floyd-Warshall"], ans: 1, exp: "OSPF, Link State protokolüdür. Her router Dijkstra algoritmasıyla kendi forwarding tablosunu hesaplar." },
+    { q: "BGP'de AS-PATH attribute ne işe yarar?", opts: ["Gecikmeyi ölçer", "Döngü tespiti sağlar", "Bant genişliğini gösterir", "Port numarası belirtir"], ans: 1, exp: "AS-PATH, bir route duyurusunun geçtiği AS'lerin listesidir. Router kendi AS numarasını listede görürse döngü var demektir ve route reddedilir." },
+    { q: "SNMP'de hangi mesaj agent'tan manager'a otomatik bildirim gönderir?", opts: ["GetRequest", "SetRequest", "Response", "Trap"], ans: 3, exp: "Trap, agent'ın bir olay gerçekleştiğinde (interface down vb.) manager'a proaktif gönderdiği bildirimdir." },
+    { q: "NETCONF mesajları hangi formatta kodlanır?", opts: ["JSON", "YAML", "XML", "Binary"], ans: 2, exp: "NETCONF mesajları XML formatında kodlanır ve TLS gibi güvenli transport üzerinden iletilir." },
+    { q: "iBGP ne için kullanılır?", opts: ["Farklı AS'ler arasında route paylaşmak", "Aynı AS içinde dış reachability bilgisini yaymak", "OSPF flooding yapmak", "Firewall kurallarını dağıtmak"], ans: 1, exp: "iBGP, eBGP ile öğrenilen dış reachability bilgisini aynı AS'in tüm internal router'larına dağıtır." },
+    { q: "Hierarchical OSPF'de area border router ne yapar?", opts: ["Sadece backbone'da çalışır", "Diğer AS'lere bağlanır", "Kendi alanını özetleyerek backbone'a duyurur", "DNS çözümlemesi yapar"], ans: 2, exp: "Area border router kendi local area'sının detaylı topolojisini özetler ve backbone'a duyurur. Backbone'un her alan'ın iç detaylarını bilmesine gerek kalmaz." },
+    { q: "Hot potato routing stratejisi nedir?", opts: ["En kısa AS-PATH'i seç", "En az intra-domain maliyetli gateway'i seç", "En düşük gecikmeyi seç", "BGP policy'ye göre seç"], ans: 1, exp: "Hot potato routing: Inter-domain maliyeti umursamadan, paketleri AS'ten mümkün olan en hızlı şekilde çıkarmak için en az intra-domain maliyetli gateway seçilir." },
+    { q: "YANG hangi amaçla kullanılır?", opts: ["Paket şifreleme", "NETCONF için veri modelleme", "BGP route filtreleme", "Firewall kuralı yazma"], ans: 1, exp: "YANG, NETCONF protokolünde ağ cihazlarının konfigürasyon verilerinin yapısını, tiplerini ve kısıtlarını tanımlayan veri modelleme dilidir." },
+    { q: "Gateway router'ın özelliği nedir?", opts: ["Sadece intra-AS routing yapar", "AS'in kenarında olup diğer AS'lere bağlantısı vardır", "Sadece backbone'da çalışır", "SNMP agent'ı çalıştırır"], ans: 1, exp: "Gateway router, AS'in sınırında bulunur, diğer AS'lere link sağlar. Hem intra-AS (OSPF) hem inter-AS (eBGP) protokollerini çalıştırır." }
+  ]
+},
+
+10: {
+  num: 10,
+  title: "Local Area Network (LAN)",
+  desc: "LAN mimarisi, IEEE 802 referans modeli, Ethernet, Bridge, Hub, Switch ve VLAN",
+  notes: [
+    {
+      title: "🌐 LAN Nedir?",
+      body: `
+<p>LAN (Local Area Network), genellikle bir organizasyona ait, sınırlı coğrafi alanda kurulan ağdır.</p>
+<ul class="note-list">
+  <li>WAN'lara kıyasla çok daha yüksek kapasiteye sahiptir (daha fazla iç trafik)</li>
+  <li>Yaygın topolojiler: bus, tree, ring, <strong>star</strong> (günümüzde hâkim)</li>
+  <li>Star topolojisi switch'ler üzerine kuruludur</li>
+  <li>Bus topolojisi wireless LAN ile benzerlik taşır; wireless LAN erişim protokolleri bus LAN'dan evrilmiştir</li>
+</ul>
+      `
+    },
+    {
+      title: "📋 IEEE 802 Referans Modeli",
+      body: `
+<p>LAN ve MAN (Metropolitan Area Network) protokollerinin standardı. OSI'nin alt 2 katmanına odaklanır.</p>
+<div class="highlight-box"><strong>Physical Layer (Fiziksel Katman):</strong>
+<ul class="note-list" style="margin-top:0.5rem">
+  <li>Sinyallerin kodlama/çözme işlemleri</li>
+  <li>Preamble oluşturma/kaldırma (senkronizasyon için)</li>
+  <li>Bit iletimi ve alımı</li>
+</ul></div>
+<div class="highlight-box yellow"><strong>MAC (Medium Access Control) Layer:</strong>
+<ul class="note-list" style="margin-top:0.5rem">
+  <li>Gönderimde: Frame'i adres ve CRC alanlarıyla oluşturur</li>
+  <li>Alımda: Frame'i çözer, adres tanıma ve hata tespiti yapar</li>
+  <li>LAN ortamına erişimi yönetir</li>
+</ul></div>
+<div class="highlight-box green"><strong>LLC (Logical Link Control) Layer:</strong>
+<ul class="note-list" style="margin-top:0.5rem">
+  <li>Üst katmanlara (Layer 3+) arayüz sağlar</li>
+  <li>Akış kontrolü (flow control) yapar</li>
+  <li>Hata kontrolü (error control) yapar</li>
+</ul></div>
+      `
+    },
+    {
+      title: "🔌 Ethernet (IEEE 802.3)",
+      body: `
+<p>Kablolu LAN'ların ezici çoğunluğunda kullanılan standart. İlk Ethernet 1976'da Xerox PARC'ta yaratıldı ve o günden bu yana 4 jenerasyon geçirdi.</p>
+<p><strong>MAC Frame Formatı:</strong></p>
+<ul class="note-list">
+  <li><code>MAC Control:</code> Protokol kontrol bilgisi (örn. öncelik seviyesi)</li>
+  <li><code>Destination MAC Address:</code> Hedef fiziksel adres — 6 byte (48 bit)</li>
+  <li><code>Source MAC Address:</code> Kaynak fiziksel adres — 6 byte (48 bit)</li>
+  <li><code>LLC:</code> Üst katmandan gelen veri</li>
+  <li><code>CRC:</code> Cyclic Redundancy Check — hata tespiti</li>
+</ul>
+<div class="highlight-box"><strong>MAC Adresi:</strong> NIC'e (Network Interface Card) üretici tarafından gömülü. 48 bit, hexadecimal gösterilir. Windows'ta <code>ipconfig /all</code> ile görülür. Teorik olarak sabit; yazılımla değiştirilebilir ama fiziksel olarak NIC'e yazılmıştır.</div>
+      `
+    },
+    {
+      title: "🔗 Bridge, Hub ve Switch Karşılaştırması",
+      body: `
+<table class="compare-table">
+  <tr><th>Cihaz</th><th>Katman</th><th>Çalışma Mantığı</th><th>Özellik</th></tr>
+  <tr><td><strong>Hub</strong></td><td>Layer 1</td><td>Repeater gibi — gelen sinyali tüm portlara kopyalar</td><td>Intelligent değil, tek collision domain, her şeye yayar</td></tr>
+  <tr><td><strong>Bridge</strong></td><td>Layer 2</td><td>MAC adresine göre frame iletir (yazılımda)</td><td>Aynı protokoldeki LAN'ları birleştirir, tek seferde 1 frame</td></tr>
+  <tr><td><strong>Switch</strong></td><td>Layer 2</td><td>MAC adresine göre donanımda iletir</td><td>Paralel birden fazla frame, cut-through veya store-and-forward</td></tr>
+</table>
+<div class="highlight-box yellow"><strong>Store-and-forward switch:</strong> Frame'in tamamını alır → CRC ile hata kontrolü → temizse iletir. Daha güvenilir, biraz daha yavaş.<br><br>
+<strong>Cut-through switch:</strong> Destination MAC okunur okunmaz iletmeye başlar. Çok düşük gecikme ama hatalı frame'ler de geçebilir.</div>
+<p><strong>Switch vs Bridge farkı:</strong> Bridge frame işlemeyi yazılımda yapar, tek seferde 1 frame. Switch donanımda yapar, birden fazla frame'i paralel iletir — çok daha hızlı.</p>
+      `
+    },
+    {
+      title: "🏷️ VLAN (Virtual LAN)",
+      body: `
+<p>VLAN, fiziksel konumdan bağımsız olarak cihazları mantıksal olarak gruplandırır. Switch'lerde MAC katmanında uygulanır.</p>
+<ul class="note-list">
+  <li>Yazılımla oluşturulur, fiziksel kablo değişikliği gerektirmez</li>
+  <li>Broadcast domain'leri küçültür → daha verimli, daha güvenli ağ</li>
+  <li>Fiziksel olarak dağılmış departmanları tek mantıksal LAN'da birleştirebilir</li>
+</ul>
+<div class="highlight-box"><strong>VLAN Üyelik Yöntemleri:</strong><br>
+1. <strong>Port group:</strong> Hangi switch portu hangi VLAN'a ait<br>
+2. <strong>MAC address:</strong> NIC MAC adresine göre — cihaz taşınsa bile VLAN üyeliği korunur<br>
+3. <strong>Protocol/IP bilgisi:</strong> Üst katman protokol veya IP adresine göre</div>
+<div class="highlight-box yellow"><strong>Trunk port vs End port:</strong><br>
+<strong>Trunk port:</strong> İki switch'i birbirine bağlar, birden fazla VLAN trafiğini taşır<br>
+<strong>End port:</strong> Switch ile son kullanıcı cihazı arasında, tek VLAN</div>
+<p><strong>Unicast vs Broadcast:</strong> Unicast: frame tek bir hedef MAC adresine gönderilir (workstation X → workstation Y). Broadcast: tüm VLAN üyelerine gönderilir.</p>
+      `
+    }
+  ],
+  questions: [
+    { q: "IEEE 802 modelinde Physical, MAC ve LLC katmanlarının görevleri nelerdir?", a: "Physical: Sinyal kodlama/çözme, preamble oluşturma/kaldırma, bit iletimi/alımı. MAC: Gönderimde frame'i adres+CRC ile oluşturur; alımda çözer, adres tanıma+hata tespiti yapar; LAN ortamına erişimi yönetir. LLC: Üst katmanlara arayüz, akış kontrolü ve hata kontrolü sağlar." },
+    { q: "Hub ile Switch arasındaki temel farklar nelerdir?", a: "Hub Layer 1'de çalışır, repeater gibi sinyali tüm portlara kopyalar, MAC adresinden haberi yoktur, tek collision domain. Switch Layer 2'de çalışır, MAC tablosuna göre sadece doğru porta iletir, donanımda işler, birden fazla frame'i paralel işleyebilir, cut-through veya store-and-forward seçeneği var. Switch çok daha zeki ve verimlidir." },
+    { q: "VLAN neden kullanılır? MAC adresine dayalı üyeliğin avantajı nedir?", a: "VLAN fiziksel konumdan bağımsız mantıksal gruplandırma sağlar. Broadcast trafiğini azaltır, güvenliği artırır, esneklik sağlar. MAC adresi NIC'e gömülü olduğundan değişmez; bir cihaz farklı porta ya da switch'e taşınsa bile MAC adresi tanınarak aynı VLAN'a atanmaya devam eder. Yönetim kolaylığı sağlar." },
+    { q: "Ethernet MAC frame'in alanlarını sırala ve CRC ne için kullanılır?", a: "MAC frame alanları: MAC Control (kontrol bilgisi/öncelik), Destination MAC Address (hedef 6 byte), Source MAC Address (kaynak 6 byte), LLC (üst katman verisi), CRC (hata tespiti). CRC (Cyclic Redundancy Check): iletim sırasında oluşan bit hatalarını tespit eder. Alıcı CRC'yi yeniden hesaplayarak gelen değerle karşılaştırır; eşleşmezse hata var demektir." }
+  ],
+  quiz: [
+    { q: "IEEE 802 modelinde MAC katmanı hangi OSI katmanının alt bölümüdür?", opts: ["Layer 1 (Physical)", "Layer 2 (Data Link)", "Layer 3 (Network)", "Layer 4 (Transport)"], ans: 1, exp: "MAC, OSI'nin Data Link (Layer 2) katmanının alt bölümüdür. Üstünde LLC, altında Physical katman yer alır." },
+    { q: "Ethernet ilk olarak nerede geliştirildi?", opts: ["MIT Lincoln Lab", "Bell Labs", "Xerox PARC", "IBM Zurich"], ans: 2, exp: "Ethernet 1976'da Xerox'un Palo Alto Research Center'ında (PARC) Robert Metcalfe tarafından geliştirildi." },
+    { q: "Hub hangi katmanda çalışır?", opts: ["Layer 1 (Physical)", "Layer 2 (Data Link)", "Layer 3 (Network)", "Layer 4"], ans: 0, exp: "Hub Layer 1'de çalışan basit repeater'dır. MAC adresinden haberi yoktur; gelen sinyali tüm portlara kopyalar." },
+    { q: "Switch'in Bridge'e göre avantajı nedir?", opts: ["Daha ucuzdur", "Donanımda çalışır, birden fazla frame'i paralel iletir", "Wireless desteği var", "IP routing yapar"], ans: 1, exp: "Switch frame işlemeyi donanımda yapar (Bridge yazılımda). Paralel veri yollarıyla birden fazla frame'i aynı anda işleyebilir. Bridge tek seferde 1 frame işler." },
+    { q: "Store-and-forward switch'in cut-through'a göre avantajı nedir?", opts: ["Daha düşük gecikme", "Hatalı frame'leri CRC ile filtreler", "Daha ucuzdur", "MAC tablosu tutmaz"], ans: 1, exp: "Store-and-forward frame'in tamamını alır ve CRC kontrolü yapar. Hatalı frame'leri iletmez. Cut-through ise hızlıdır ama hatalı frame'leri de iletebilir." },
+    { q: "VLAN mantıksal olarak nerede uygulanır?", opts: ["Router, Layer 3'te", "Hub, Layer 1'de", "Switch, MAC katmanında", "Firewall'da"], ans: 2, exp: "VLAN mantığı LAN switch'lerinde MAC katmanında (Layer 2) uygulanır." },
+    { q: "Trunk port ne işe yarar?", opts: ["Son kullanıcıyı switch'e bağlar", "İki switch'i birbirine bağlar ve çok VLAN taşır", "WAN bağlantısı sağlar", "DHCP verir"], ans: 1, exp: "Trunk port, iki switch arasındaki bağlantıyı kurar ve birden fazla VLAN'ın trafiğini tek link üzerinden taşır." },
+    { q: "MAC adresi nerede saklanır?", opts: ["Router belleğinde", "NIC'e (Network Interface Card) gömülü", "DNS sunucusunda", "Switch tablosunda"], ans: 1, exp: "MAC adresi (donanım/fiziksel adres) ağ arayüz kartına (NIC) üretici tarafından 48 bit olarak yazılmıştır." },
+    { q: "MAC adresine göre VLAN üyeliğinin avantajı nedir?", opts: ["Kurulumu daha kolay", "Cihaz taşınsa bile VLAN üyeliği korunur", "Daha az bant genişliği", "IP adresi gerektirmez"], ans: 1, exp: "MAC adresi NIC'e gömülüdür. Cihaz farklı bir switch portuna takılsa da MAC tanınarak aynı VLAN'a atanır." },
+    { q: "CRC Ethernet frame'de ne için kullanılır?", opts: ["Şifreleme", "Adres çözümleme", "Hata tespiti", "Akış kontrolü"], ans: 2, exp: "CRC iletim sırasında oluşan bit hatalarını tespit eder. Alıcı CRC'yi yeniden hesaplayarak karşılaştırır." }
+  ]
+},
+
+11: {
+  num: 11,
+  title: "Security (I)",
+  desc: "Network güvenliğinin temelleri: kriptografi, authentication, digital signature, CA, TLS",
+  notes: [
+    {
+      title: "🔒 Network Güvenliği Nedir?",
+      body: `
+<p>Dört temel güvenlik hedefi:</p>
+<ul class="note-list">
+  <li><strong>Confidentiality (Gizlilik):</strong> Yalnızca gönderici ve alıcı mesajı anlayabilir. Şifreleme ile sağlanır.</li>
+  <li><strong>Authentication (Kimlik Doğrulama):</strong> Gönderici ve alıcı birbirinin kimliğini doğrular.</li>
+  <li><strong>Message Integrity:</strong> Mesajın iletimde değiştirilmediği garanti edilir. Hash + dijital imza ile sağlanır.</li>
+  <li><strong>Access & Availability:</strong> Servisler yetkili kullanıcılara erişilebilir kalır.</li>
+</ul>
+<div class="highlight-box yellow"><strong>Alice, Bob, Trudy:</strong> Güvenlik anlatısının klasik figürleri. Alice ile Bob güvenli iletişim kurmak ister. Trudy (intruder) ise:<br>
+• Eavesdrop: Mesajları dinler<br>
+• Impersonation: Kaynak adresi taklit eder (IP spoofing)<br>
+• Hijacking: Aktif bağlantıyı ele geçirir<br>
+• Denial of Service: Servisi kullanılamaz yapar<br>
+• Insert/delete messages: Mesaj ekler/siler</div>
+      `
+    },
+    {
+      title: "🔑 Symmetric Key Cryptography",
+      body: `
+<p>Gönderici ve alıcı <strong>aynı anahtarı</strong> kullanır — hem şifreleme hem de çözme için.</p>
+<div class="highlight-box"><strong>Örnekler:</strong> DES (Data Encryption Standard), 3DES, AES (Advanced Encryption Standard)<br>
+<strong>Avantaj:</strong> Çok hızlıdır<br>
+<strong>Dezavantaj:</strong> Anahtarı güvenli şekilde paylaşmak nasıl olacak?</div>
+<p><strong>Şifre kırma yaklaşımları:</strong></p>
+<ul class="note-list">
+  <li><strong>Cipher-text only attack:</strong> Sadece şifreli metin var. Brute force veya istatistiksel analiz.</li>
+  <li><strong>Known-plaintext attack:</strong> Bazı plaintext-ciphertext çiftleri biliniyor. Bu çiftlerden anahtar çıkarılmaya çalışılır.</li>
+  <li><strong>Chosen-plaintext attack:</strong> Saldırgan seçtiği plaintext için ciphertext elde edebiliyor. En güçlü saldırı türü.</li>
+</ul>
+      `
+    },
+    {
+      title: "🔐 Public Key Cryptography (Asymmetric)",
+      body: `
+<p>Her tarafın iki anahtarı vardır: herkese açık <strong>public key (K⁺)</strong> ve gizli <strong>private key (K⁻)</strong>.</p>
+<div class="highlight-box green"><strong>Temel prensip:</strong><br>
+<code>K⁺ ile şifrele → yalnızca K⁻ ile çözülür</code> (şifreleme için)<br>
+<code>K⁻ ile şifrele → yalnızca K⁺ ile çözülür</code> (imzalama için)<br><br>
+Alice, Bob'a şifreli mesaj göndermek isterse <strong>Bob'un public key'ini (K⁺_B)</strong> kullanır. Yalnızca Bob kendi private key'i ile çözebilir.</div>
+<ul class="note-list">
+  <li><strong>Örnekler:</strong> RSA, Diffie-Hellman</li>
+  <li>Symmetric'e göre çok yavaştır — genellikle anahtar değişimi için kullanılır</li>
+  <li>Anahtar dağıtım problemi yoktur: public key herkesle paylaşılabilir</li>
+</ul>
+      `
+    },
+    {
+      title: "✍️ Digital Signature (Dijital İmza) & Hash",
+      body: `
+<p>Mesajın sahibi olduğunu <strong>ve</strong> değiştirilmediğini kanıtlama mekanizması.</p>
+<div class="highlight-box"><strong>Adım adım:</strong><br>
+1. Bob, mesaj m'yi hash fonksiyonundan geçirir → <code>H(m)</code><br>
+2. H(m)'yi kendi private key'i <code>K⁻_B</code> ile şifreler → dijital imza<br>
+3. Mesajı + imzayı Alice'e gönderir<br>
+4. Alice, Bob'un public key'i <code>K⁺_B</code> ile imzayı çözerek H(m)'yi elde eder<br>
+5. Alice kendi başına m'nin hash'ini hesaplar<br>
+6. İki hash eşleşirse → mesaj Bob'dan gelmiştir ve değiştirilmemiştir</div>
+<p><strong>Neden önce hash?</strong> Büyük mesajı asymmetric key ile imzalamak çok yavaştır. Küçük, sabit boyutlu hash çok daha hızlıdır.</p>
+<div class="highlight-box yellow"><strong>Hash Algoritmaları:</strong><br>
+<code>MD5</code>: 128-bit digest (RFC 1321)<br>
+<code>SHA-1</code>: 160-bit digest (US standardı, NIST)<br>
+<strong>Hash fonksiyonu özellikleri:</strong> Tek yönlü (tersine hesaplanamaz), collision-resistant (farklı mesajlar aynı hash'i vermez)</div>
+      `
+    },
+    {
+      title: "🏛️ Certification Authority (CA) & TLS",
+      body: `
+<p>Public key'i bir kimliğe <strong>güvenilir şekilde bağlamak</strong> için CA kullanılır.</p>
+<ul class="note-list">
+  <li>Entity (kişi, website, router) kimliğini CA'ya kanıtlar ve public key'ini kaydeder</li>
+  <li>CA, entity'nin public key'ini CA'nın kendi private key'i ile imzalar → <strong>sertifika</strong> oluşur</li>
+  <li>Alice, Bob'un public key'ini doğrulamak için Bob'un sertifikasını alır ve CA'nın public key'i ile doğrular</li>
+</ul>
+<div class="highlight-box red"><strong>CA olmadan ne olur?</strong> Trudy kendi public key'ini Bob'unmuş gibi sunabilir — man-in-the-middle saldırısı. CA bu saldırıyı önler çünkü Trudy, CA'nın private key'ine sahip değildir ve geçerli bir sertifika üretemez.</div>
+<div class="highlight-box green"><strong>TLS (Transport Layer Security):</strong><br>
+• TCP bağlantısı üzerinde çalışır<br>
+• Handshake: public key kriptografi ile simetrik anahtar değişimi<br>
+• Veri iletimi: symmetric key ile şifreli (AES gibi)<br>
+• Certificate ile sunucu kimliği doğrulanır<br>
+• HTTPS = HTTP over TLS</div>
+      `
+    }
+  ],
+  questions: [
+    { q: "Symmetric ve asymmetric kriptografi arasındaki temel farklar nelerdir?", a: "Symmetric: Gönderici ve alıcı aynı anahtarı kullanır. Çok hızlıdır. Ana sorun güvenli anahtar paylaşımıdır. (DES, AES) Asymmetric: Her tarafın public/private key çifti vardır. Public key'i paylaşmak güvenlidir. Çok yavaştır, genelde sadece anahtar değişiminde kullanılır. (RSA, Diffie-Hellman)" },
+    { q: "Dijital imza nasıl çalışır? Adım adım açıkla.", a: "1) Bob m'yi hash fonksiyonundan geçirir → H(m). 2) H(m)'yi kendi K⁻_B (private key) ile şifreler → dijital imza. 3) Mesajı + imzayı Alice'e gönderir. 4) Alice K⁺_B (Bob'un public key) ile imzayı çözer → H(m). 5) Alice m'nin hash'ini bağımsız hesaplar. 6) İki hash eşleşirse mesaj Bob'dan ve değişmemiş." },
+    { q: "CA (Certification Authority) neden gereklidir?", a: "CA olmadan Trudy kendi public key'ini Bob'unmuş gibi sunabilir — man-in-the-middle. CA, entity'nin kimliğini doğrular ve public key'ini CA'nın private key'i ile imzalar (sertifika). Alice sertifikayı CA'nın public key'i ile doğrular. Trudy'nin CA'nın private key'i yoktur, bu yüzden geçerli sertifika üretemez." },
+    { q: "'Known-plaintext attack' ve 'chosen-plaintext attack' arasındaki fark nedir?", a: "Known-plaintext: Saldırgan bazı plaintext-ciphertext çiftlerini biliyor (gözlemleyerek elde etmiş). Bu çiftlerden anahtarı çıkarmaya çalışır. Chosen-plaintext: Saldırgan istediği plaintext'i seçerek onun ciphertext'ini elde edebiliyor (şifreleme oracle'ına erişim var). Daha güçlü bir saldırı modeli." },
+    { q: "TLS handshake sürecinde neler olur?", a: "1) Client, sunucudan sertifika ister. 2) Sunucu CA tarafından imzalı sertifikasını gönderir (public key içerir). 3) Client, sertifikayı CA'nın public key'i ile doğrular. 4) Client, sunucunun public key'i ile bir pre-master secret şifreler ve gönderir. 5) Her iki taraf bu secret'tan symmetric session key türetir. 6) Bundan sonra symmetric key (AES gibi) ile şifreli iletişim başlar." }
+  ],
+  quiz: [
+    { q: "Network güvenliğinde 'confidentiality' ne anlama gelir?", opts: ["Mesajın değişmediğini garanti etmek", "Sadece gönderici ve alıcının mesajı anlayabilmesi", "Servisin sürekli erişilebilir olması", "Kimlik doğrulama"], ans: 1, exp: "Confidentiality (gizlilik), mesajın yalnızca gönderici ve alıcı tarafından anlaşılmasıdır. Şifreleme ile sağlanır." },
+    { q: "Alice Bob'a şifreli mesaj göndermek istiyor. Hangi anahtarı kullanmalı?", opts: ["Kendi private key'ini", "Bob'un private key'ini", "Bob'un public key'ini", "Ortak symmetric key"], ans: 2, exp: "Asymmetric şifrelemede alıcının public key'i ile şifrelenir. Yalnızca Bob'un private key'i ile çözülebilir." },
+    { q: "Dijital imzada Bob mesajı imzalarken hangi anahtarı kullanır?", opts: ["Bob'un public key'i", "Alice'in public key'i", "Bob'un private key'i", "CA'nın public key'i"], ans: 2, exp: "Dijital imzada imzalayan kişi kendi private key'ini kullanır. Herkes public key ile doğrulayabilir ama yalnızca Bob imza oluşturabilir." },
+    { q: "MD5 hash fonksiyonu kaç bit'lik digest üretir?", opts: ["64 bit", "128 bit", "160 bit", "256 bit"], ans: 1, exp: "MD5 128-bit message digest üretir (RFC 1321). SHA-1 ise 160-bit üretir." },
+    { q: "Chosen-plaintext attack nedir?", opts: ["Sadece ciphertext analizi", "Bazı plain-cipher çiftleri bilerek yapılan saldırı", "Saldırgan seçtiği plaintext için ciphertext elde edebilir", "Brute force"], ans: 2, exp: "Chosen-plaintext attack'ta saldırgan istediği plaintext'i seçerek onun ciphertext'ini elde edebilir. Şifreleme oracle'ına erişim var — en güçlü saldırı modeli." },
+    { q: "CA sertifikası ne içerir?", opts: ["Şifreli mesajlar", "Entity'nin public key'i, CA'nın private key'iyle imzalanmış", "Kullanıcı adı ve şifre", "IP routing tablosu"], ans: 1, exp: "CA sertifikası entity'nin public key'ini içerir ve CA'nın private key'i ile imzalanmıştır. Bu sayede herkes CA'nın public key'i ile sertifikayı doğrulayabilir." },
+    { q: "Man-in-the-middle saldırısını önlemek için ne kullanılır?", opts: ["Symmetric encryption", "CA sertifikaları", "Hash fonksiyonları", "Firewall"], ans: 1, exp: "CA sertifikaları man-in-the-middle'ı önler. Trudy kendi public key'ini Bob'unmuş gibi sunamaz — geçerli CA sertifikası yoktur." },
+    { q: "Asymmetric kriptografinin symmetric'e göre avantajı nedir?", opts: ["Çok daha hızlıdır", "Güvenli anahtar paylaşım sorunu yoktur", "Daha az bellek", "Quantum-resistant"], ans: 1, exp: "Public key herkesle açıkça paylaşılabilir. Symmetric'te anahtar güvenli paylaşım büyük pratik sorundur." },
+    { q: "TLS'de veri iletimi hangi şifreleme yöntemiyle yapılır?", opts: ["Sadece RSA ile", "Sadece Diffie-Hellman", "Symmetric key (handshake'de değiştirilmiş) ile", "Hash fonksiyonu ile"], ans: 2, exp: "TLS handshake'de asymmetric kriptografi kullanılarak symmetric session key değiştirilir. Asıl veri iletimi bu symmetric key (AES gibi) ile yapılır — çünkü symmetric çok daha hızlıdır." },
+    { q: "Hash fonksiyonunu dijital imzada kullanmanın nedeni nedir?", opts: ["Mesajı şifrelemek", "Büyük mesaj yerine küçük digest imzalamak", "Anahtar üretmek", "Kimlik doğrulamak"], ans: 1, exp: "Büyük mesajı asymmetric key ile imzalamak çok yavaştır. Önce mesajın hash'i (küçük, sabit boyutlu) alınır, sonra bu imzalanır." }
+  ]
+},
+
+12: {
+  num: 12,
+  title: "Security (II)",
+  desc: "Firewall türleri, stateless/stateful filtering, application gateway, IDS, DMZ ve iptables",
+  notes: [
+    {
+      title: "🧱 Firewall Nedir ve Neden Gerekli?",
+      body: `
+<p>Firewall, organizasyonun iç ağını dış İnternetten izole eder — bazı paketlere izin verir, bazılarını engeller.</p>
+<div class="highlight-box"><strong>Firewall üç önemli tehdide karşı korur:</strong>
+<ul class="note-list" style="margin-top:0.5rem">
+  <li><strong>DoS (Denial of Service) saldırıları:</strong> Örneğin SYN flooding — saldırgan çok sayıda sahte TCP SYN gönderir, sunucu kaynakları tükenir, gerçek bağlantılar kurulamaz</li>
+  <li><strong>Yetkisiz erişim:</strong> İç ağa izinsiz erişim girişimleri</li>
+  <li><strong>İç veri değiştirilmesi:</strong> Saldırganın iç sunuculardaki verileri manipüle etmesi</li>
+</ul></div>
+<p><strong>Üç tür firewall:</strong></p>
+<ul class="note-list">
+  <li>Stateless packet filter</li>
+  <li>Stateful packet filter</li>
+  <li>Application gateway</li>
+</ul>
+      `
+    },
+    {
+      title: "📋 Stateless Packet Filtering",
+      body: `
+<p>Her paketi <strong>bağımsız olarak</strong> değerlendirir — önceki paketlerden haberi yoktur.</p>
+<p><strong>Karar kriterleri (başlık alanları):</strong></p>
+<ul class="note-list">
+  <li>Source/Destination IP adresi</li>
+  <li>TCP/UDP source/destination port numarası</li>
+  <li>ICMP mesaj tipi</li>
+  <li>TCP SYN ve ACK bit değerleri</li>
+</ul>
+<div class="highlight-box"><strong>ACL (Access Control List):</strong> Kurallar en üstten aşağıya uygulanır. İlk eşleşen kural geçerlidir. En sona "deny all" konulur (açıkça izin verilmemiş her şeyi engelle).</div>
+<div class="highlight-box yellow"><strong>Örnek politikalar:</strong><br>
+• No outside Web access → port 80'e giden tüm dış paketleri DROP<br>
+• Dış TCP bağlantılarını engelle, iç → dış izin ver → Gelen ACK=0 TCP SYN'leri blokla<br>
+• Web radyo bant genişliği koruma → gelen UDP'leri (DNS hariç) blokla<br>
+• Smurf DoS önleme → broadcast adresine giden ICMP'leri DROP</div>
+      `
+    },
+    {
+      title: "🔄 Stateful Packet Filtering",
+      body: `
+<p>Her TCP bağlantısının durumunu takip eder — "mantıklı olmayan" paketleri reddeder.</p>
+<div class="highlight-box red"><strong>Stateless'ın zayıflığı:</strong> Stateless filter "ACK=1, dest port 80" olan pakete izin verebilir, oysa hiç TCP bağlantısı kurulmamış olabilir. Saldırgan bu açığı istismar edebilir.</div>
+<div class="highlight-box green"><strong>Stateful çözümü:</strong>
+<ul class="note-list" style="margin-top:0.5rem">
+  <li>SYN (bağlantı kurma) ve FIN (bağlantı kapatma) paketlerini izler</li>
+  <li>Aktif bağlantı tablosu tutar</li>
+  <li>Inactive bağlantıları timeout ile sona erdirir</li>
+  <li>ACL'ye "check connection state" eklenir — tabloda olmayan bağlantıdan gelen paket reddedilir</li>
+</ul></div>
+<p>Stateful ACL'de "x" işareti olan satırlar bağlantı tablosu kontrolü gerektirir.</p>
+      `
+    },
+    {
+      title: "🚪 Application Gateway & Sınırlamalar",
+      body: `
+<p>Application gateway, IP/TCP/UDP başlıklarına ek olarak <strong>uygulama katmanı verisini</strong> de filtreler.</p>
+<div class="highlight-box"><strong>Telnet örneği:</strong><br>
+1. Kullanıcı gateway üzerinden telnet bağlantısı kurar<br>
+2. Yetkili kullanıcılar için gateway hedef host'a ikinci telnet bağlantısı açar<br>
+3. Router tüm direkt telnet bağlantılarını bloklar, yalnızca gateway üzerindekilere izin verir</div>
+<p><strong>Firewall genel sınırlamaları:</strong></p>
+<ul class="note-list">
+  <li><strong>IP spoofing:</strong> Router kaynak adresi doğrulayamaz — saldırgan kaynak IP'yi taklit edebilir</li>
+  <li>Her uygulama için ayrı application gateway gerekebilir</li>
+  <li>Client yazılımı gateway'i bilmeli (örn. tarayıcıda proxy IP adresi)</li>
+  <li>UDP için genellikle "hepsi ya da hiçbiri" politikası</li>
+  <li>Yüksek korumadaki siteler bile saldırılara maruz kalabilir</li>
+</ul>
+      `
+    },
+    {
+      title: "🔍 IDS, DMZ ve iptables",
+      body: `
+<p><strong>IDS (Intrusion Detection System):</strong> Firewall port/IP bakıyordu; IDS <strong>paket içeriğine</strong> bakarak saldırı tespit eder.</p>
+<div class="highlight-box"><strong>Deep packet inspection:</strong> Paket içeriğini (payload) bilinen virüs, saldırı imzaları veritabanına karşı kontrol eder. Birden fazla paket arasındaki ilişkiyi inceler: port scanning, network mapping, DoS pattern.</div>
+<div class="highlight-box yellow"><strong>DMZ (Demilitarized Zone):</strong> Web server, FTP server, DNS server gibi public server'lar iç ağdan ayrı bir bölgeye konulur. IDS sensörleri farklı noktalara yerleştirilerek farklı kontrol türleri uygulanır.</div>
+<p><strong>iptables — Linux kernel firewall aracı:</strong></p>
+<ul class="note-list">
+  <li>Packet filter kuralları zincirler halinde tanımlanır (INPUT, OUTPUT, FORWARD)</li>
+  <li><code>sudo iptables -L</code> → mevcut kuralları listele</li>
+  <li><code>sudo iptables -L --line-numbers</code> → satır numarasıyla listele</li>
+  <li><code>sudo iptables -A INPUT -p icmp --icmp-type echo-request -j DROP</code> → ping'i engelle</li>
+  <li><code>sudo iptables -D INPUT 1</code> → 1. kuralı sil</li>
+</ul>
+      `
+    }
+  ],
+  questions: [
+    { q: "Stateless ve stateful packet filter arasındaki temel fark nedir? Örnek ver.", a: "Stateless her paketi bağımsız inceler, önceki paketleri hatırlamaz. 'ACK=1, port 80' olan pakete hiç TCP bağlantısı kurulmamış olsa bile izin verebilir. Stateful ise her TCP bağlantısının durumunu takip eder (SYN, FIN, timeout). Tabloda olmayan bağlantıya ait gibi görünen paket reddedilir — çok daha güvenli." },
+    { q: "SYN flooding saldırısı nedir ve nasıl çalışır?", a: "SYN flooding DoS saldırısıdır. Saldırgan çok sayıda TCP SYN paketi gönderir fakat hiç ACK göndermez (yarım-açık bağlantılar). Sunucu her bağlantı için state tutmak zorundadır — kaynaklar tükenir, gerçek bağlantılar kurulamaz. Stateful firewall yarım-açık bağlantıları timeout ile temizleyerek ve belirli IP'lerden gelen SYN yağmurunu tespit ederek önler." },
+    { q: "ACL'de 'deny all' neden en sona konulur?", a: "ACL kuralları yukarıdan aşağıya uygulanır, ilk eşleşen geçerli olur. 'Deny all' en sona konulur çünkü açıkça izin verilmemiş her paket bu kuralla engellenir. Bu 'default-deny' prensibidir: ne yapacağı bilinmeyen her şeyi engelle. Olmasaydı, hiçbir kurala uymayan paketler varsayılan olarak geçebilirdi." },
+    { q: "IDS ile Firewall arasındaki fark nedir?", a: "Firewall: paket başlıklarına (IP, port, TCP flag) göre paketi izin verir veya bloklar. Oturum korelasyonu yapmaz. IDS: deep packet inspection ile paket içeriğini (payload) virüs/saldırı imzaları veritabanına karşı kontrol eder. Birden fazla paket arasındaki örüntüleri analiz eder (port scanning, DoS, network mapping). Firewall engeller, IDS tespit eder ve uyarır." },
+    { q: "Application gateway'in packet filter'dan farkı nedir?", a: "Packet filter sadece Layer 3-4 başlıklarına (IP, TCP/UDP port, flag) bakarak karar verir. Application gateway bunlara ek olarak uygulama katmanı verisini (Layer 7) de inceler. Örneğin: bir telnet oturumunda kullanıcının yetkili olup olmadığını kontrol eder, HTTP içeriğini tarar. Daha güçlü ama her uygulama için ayrı gateway gerektirir ve daha yavaştır." }
+  ],
+  quiz: [
+    { q: "Stateless packet filter hangi bilgiye bakarak karar verir?", opts: ["Bağlantı durumuna", "Payload içeriğine", "IP/TCP başlık alanlarına (src/dst IP, port, flag)", "Kullanıcı kimliğine"], ans: 2, exp: "Stateless filter kaynak/hedef IP, port numaraları, TCP flag'leri ve ICMP tipi gibi başlık alanlarına bakarak karar verir. Payload'a bakmaz." },
+    { q: "SYN flooding hangi tür saldırıdır?", opts: ["Man-in-the-middle", "Denial of Service (DoS)", "Replay attack", "SQL injection"], ans: 1, exp: "SYN flooding DoS saldırısıdır. Çok sayıda sahte TCP SYN gönderilerek sunucu kaynakları tükenir." },
+    { q: "Stateful filter'ın stateless'a göre avantajı nedir?", opts: ["Daha hızlıdır", "Bağlantı durumunu takip ederek 'mantıksız' paketleri reddeder", "Uygulama katmanını inceler", "Daha az bellek kullanır"], ans: 1, exp: "Stateful filter TCP bağlantı tablosu tutar. Hiç kurulmamış bağlantıya ait gibi görünen paketleri tespit edip reddeder." },
+    { q: "ACL'de kurallar hangi sırayla uygulanır?", opts: ["Rastgele", "En son eklenen önce", "Yukarıdan aşağıya, ilk eşleşen geçerli", "En kısa kural önce"], ans: 2, exp: "ACL kuralları yukarıdan aşağıya uygulanır. İlk eşleşen kural geçerlidir ve işlem durur." },
+    { q: "IDS 'deep packet inspection' ile ne yapar?", opts: ["Sadece kaynak IP kontrol eder", "Payload'ı saldırı imzaları DB'sine karşı kontrol eder", "Port numarasına göre bloklar", "Bağlantı süresini ölçer"], ans: 1, exp: "Deep packet inspection paketin payload'ını virüs ve saldırı imzaları veritabanına karşı kontrol eder. Ayrıca çoklu paket örüntülerine de bakabilir." },
+    { q: "DMZ (Demilitarized Zone) nedir?", opts: ["Şifreli tünel", "Public server'ların iç ağdan ayrıldığı bölge", "VPN sunucusu", "VLAN türü"], ans: 1, exp: "DMZ, web/FTP/DNS gibi public server'ların iç ağdan ayrı tutulduğu ara bölgedir. Dış kullanıcılar DMZ'ye erişebilir ama iç ağa doğrudan giremez." },
+    { q: "Linux'ta ping'i engellemek için hangi iptables komutu kullanılır?", opts: ["sudo iptables -A INPUT -p tcp --dport 80 -j DROP", "sudo iptables -A INPUT -p icmp --icmp-type echo-request -j DROP", "sudo iptables -D INPUT 1", "sudo iptables -L"], ans: 1, exp: "ICMP echo-request ping isteğinin türüdür. Bu komutla gelen ping istekleri DROP edilir." },
+    { q: "Application gateway'in packet filter'dan farkı nedir?", opts: ["Daha hızlıdır", "Uygulama katmanı verisini de filtreler", "Sadece UDP'ye bakar", "Stateless çalışır"], ans: 1, exp: "Application gateway IP/TCP başlıklarına ek olarak uygulama katmanı verisini de inceler. Telnet yetkisi, HTTP içeriği gibi şeyleri kontrol edebilir." },
+    { q: "IP spoofing neden firewall'u zorlaştırır?", opts: ["Firewall IP'yi okuyamaz", "Kaynak IP'nin gerçek olup olmadığı doğrulanamaz", "Çok fazla trafik oluşturur", "Şifreleme kullanılır"], ans: 1, exp: "IP başlığındaki kaynak adres kolayca taklit edilebilir. Router/firewall gelen paketin gerçekten o IP'den gelip gelmediğini anlayamaz." },
+    { q: "iptables'da 'deny all' kuralı en sona konulursa ne anlama gelir?", opts: ["Tüm kurallar iptal olur", "Açıkça izin verilmemiş her şey engellenir (default-deny)", "Sadece gelen trafik engellenir", "Kural çalışmaz"], ans: 1, exp: "En sondaki 'deny all', hiçbir kurala uymayan paketleri engeller. Default-deny prensibi: ne yapacağı bilinmeyen her şeyi engelle." }
+  ]
+}
+
+};
+
+// ── NAVIGATION ──
+let currentLesson = null;
+let prevPage = 'home';
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(name + '-view').classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  const btns = document.querySelectorAll('nav button');
+  if (name === 'home') btns[0].classList.add('active');
+  if (name === 'lessons') btns[1].classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function openLesson(num) {
+  prevPage = document.querySelector('.page.active').id.replace('-view', '');
+  currentLesson = LESSONS[num];
+  renderLesson(currentLesson);
+  showPage('lesson');
+}
+
+function goBack() {
+  showPage(prevPage);
+}
+
+// ── LESSON RENDERER ──
+function renderLesson(l) {
+  const el = document.getElementById('lesson-content');
+
+  const notesHtml = l.notes.map((n, i) => `
+    <div class="topic-block" id="topic-${i}">
+      <div class="topic-header" onclick="toggleTopic(${i})">
+        <h4>${n.title}</h4>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">${n.body}</div>
+    </div>
+  `).join('');
+
+  const questionsHtml = l.questions.map((q, i) => `
+    <div class="question-card">
+      <div class="q-label">Soru ${i+1}</div>
+      <h4>${q.q}</h4>
+      <button class="answer-toggle" onclick="toggleAnswer(this)">Cevabı Göster</button>
+      <div class="answer-body">${q.a}</div>
+    </div>
+  `).join('');
+
+  el.innerHTML = `
+    <div class="lesson-header">
+      <div class="lec-num">LECTURE ${l.num} — COE214 / Dr. Necip Gözüaçık</div>
+      <h2>${l.title}</h2>
+      <p>${l.desc}</p>
+    </div>
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="notes" onclick="switchTab(this, 'notes')">📖 Notlar</button>
+      <button class="tab-btn" data-tab="questions" onclick="switchTab(this, 'questions')">❓ Sorular</button>
+      <button class="tab-btn" data-tab="quiz" onclick="switchTab(this, 'quiz')">🎯 Quiz</button>
+    </div>
+    <div id="tab-notes" class="tab-content active">${notesHtml}</div>
+    <div id="tab-questions" class="tab-content">${questionsHtml}</div>
+    <div id="tab-quiz" class="tab-content">${renderQuizStart(l)}</div>
+  `;
+
+  const first = document.getElementById('topic-0');
+  if (first) { first.classList.add('open'); first.querySelector('.topic-body').style.display = 'block'; }
+}
+
+function toggleTopic(i) {
+  const block = document.getElementById('topic-' + i);
+  const body = block.querySelector('.topic-body');
+  const isOpen = block.classList.contains('open');
+  block.classList.toggle('open', !isOpen);
+  body.style.display = isOpen ? 'none' : 'block';
+}
+
+function toggleAnswer(btn) {
+  const body = btn.nextElementSibling;
+  const visible = body.classList.toggle('visible');
+  btn.textContent = visible ? 'Cevabı Gizle' : 'Cevabı Göster';
+}
+
+function switchTab(btn, tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ── QUIZ ENGINE ──
+function renderQuizStart(l) {
+  return `
+    <div class="quiz-start">
+      <h3>🎯 Quiz Başlat</h3>
+      <p>${l.quiz.length} soru — her cevabın ardından açıklama göreceksin.</p>
+      <button class="btn-primary" onclick="startQuiz()">Başla</button>
+    </div>
+  `;
+}
+
+let quizState = { questions: [], current: 0, score: 0, answered: false };
+
+function startQuiz() {
+  const qs = [...currentLesson.quiz].sort(() => Math.random() - 0.5);
+  quizState = { questions: qs, current: 0, score: 0, answered: false };
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const { questions, current } = quizState;
+  const q = questions[current];
+  const total = questions.length;
+  const pct = Math.round((current / total) * 100);
+
+  const optsHtml = q.opts.map((opt, i) => `
+    <button class="option-btn" onclick="selectOption(this, ${i})">${opt}</button>
+  `).join('');
+
+  document.getElementById('tab-quiz').innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-progress">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <span class="quiz-counter">${current + 1} / ${total}</span>
+      </div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="options">${optsHtml}</div>
+      <div id="quiz-feedback" class="quiz-feedback"></div>
+      <button class="btn-primary next-btn" id="quiz-next" onclick="nextQuestion()">Sonraki →</button>
+    </div>
+  `;
+}
+
+function selectOption(btn, idx) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+
+  const q = quizState.questions[quizState.current];
+  const correct = idx === q.ans;
+  if (correct) quizState.score++;
+
+  document.querySelectorAll('.option-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.ans) b.classList.add('correct');
+    else if (i === idx && !correct) b.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('quiz-feedback');
+  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = correct
+    ? `<strong>✅ Doğru!</strong>${q.exp}`
+    : `<strong>❌ Yanlış.</strong>${q.exp}`;
+
+  const nextBtn = document.getElementById('quiz-next');
+  nextBtn.classList.add('visible');
+  const isLast = quizState.current === quizState.questions.length - 1;
+  nextBtn.textContent = isLast ? 'Sonuçları Gör →' : 'Sonraki Soru →';
+}
+
+function nextQuestion() {
+  quizState.current++;
+  quizState.answered = false;
+  if (quizState.current >= quizState.questions.length) {
+    renderQuizResult();
+  } else {
+    renderQuizQuestion();
+  }
+}
+
+function renderQuizResult() {
+  const { score, questions } = quizState;
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+  const cls = pct >= 70 ? 'score-good' : pct >= 50 ? 'score-ok' : 'score-bad';
+  const emoji = pct >= 70 ? '🎉' : pct >= 50 ? '😅' : '📚';
+  const msg = pct >= 70 ? 'Harika! Konuya hakimsin.' : pct >= 50 ? 'Fena değil, biraz daha çalış.' : 'Notlara dön, tekrar dene!';
+
+  document.getElementById('tab-quiz').innerHTML = `
+    <div class="quiz-card quiz-result">
+      <div class="score-circle ${cls}">${pct}%</div>
+      <h3>${emoji} ${score} / ${total} doğru</h3>
+      <p>${msg}</p>
+      <button class="btn-primary" onclick="startQuiz()">Tekrar Dene</button>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
